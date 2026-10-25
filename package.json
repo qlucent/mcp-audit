@@ -17,7 +17,7 @@
     }
   },
   "bin": {
-    "mcp-audit": "./dist/cli.js"
+    "mcp-audit": "dist/cli.js"
   },
   "files": [
     "dist"

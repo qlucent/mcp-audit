@@ -1,0 +1,17 @@
+id: broad-permissions
+title: Claude Code allow rule approves every use of a tool
+severity: medium
+applies_to: settings
+check: broad-permissions
+why: 'A bare Bash rule (or mcp__*) approves every shell command or every MCP tool without a prompt, which removes the check against a prompt-injected action. Newer Claude Code versions may reject a bare mcp__* as invalid; either way, name the servers.'
+fix: 'Allow only specific commands, e.g. "Bash(npm run test *)", and name MCP servers one by one, e.g. "mcp__puppeteer__*".'
+references:
+  - https://code.claude.com/docs/en/permissions
+fixtures:
+  fail:
+    - { file: .claude/settings.json, config: { permissions: { allow: ["mcp__*"] } } }
+    - { file: .claude/settings.json, config: { permissions: { allow: ["Read", "Bash"] } } }
+    - { file: .claude/settings.json, config: { permissions: { allow: ["Bash(*)"] } } }
+    - { file: .claude/settings.json, config: { permissions: { allow: ["Bash(*:*)"] } } }
+  pass:
+    - { file: .claude/settings.json, config: { permissions: { allow: ["Bash(npm test:*)", "mcp__puppeteer__*", "mcp__github"] } } }

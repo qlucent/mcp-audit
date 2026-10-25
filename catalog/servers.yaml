@@ -1,0 +1,118 @@
+# Capabilities of well-known MCP servers, taken from their public READMEs / docs only.
+# caps: untrusted_input (reads content others can write), outbound (can send data to a third party),
+# private_data (reads your private data), code_exec, writes. Anything unclear is left out.
+- id: filesystem
+  match: { npm: ["@modelcontextprotocol/server-filesystem"], docker: [mcp/filesystem] }
+  label: reads and writes local files
+  caps: [private_data, writes]
+- id: github
+  match:
+    npm: ["@modelcontextprotocol/server-github"]
+    docker: [ghcr.io/github/github-mcp-server, mcp/github]
+    url: [api.githubcopilot.com/mcp]
+  label: reads issues and pull requests anyone can write, and can post to GitHub
+  caps: [untrusted_input, outbound, private_data, writes]
+- id: gitlab
+  match: { npm: ["@modelcontextprotocol/server-gitlab"] }
+  label: reads issues and merge requests anyone can write, and can post to GitLab
+  caps: [untrusted_input, outbound, private_data, writes]
+- id: fetch
+  match: { pypi: [mcp-server-fetch], docker: [mcp/fetch] }
+  label: reads untrusted web pages
+  caps: [untrusted_input, outbound]
+- id: brave-search
+  match: { npm: ["@modelcontextprotocol/server-brave-search"], docker: [mcp/brave-search] }
+  label: reads untrusted search results
+  caps: [untrusted_input]
+- id: puppeteer
+  match: { npm: ["@modelcontextprotocol/server-puppeteer"], docker: [mcp/puppeteer] }
+  label: browses the web and runs page scripts
+  caps: [untrusted_input, outbound, code_exec]
+- id: playwright
+  match: { npm: ["@playwright/mcp"], docker: [mcp/playwright] }
+  label: browses the web and runs page scripts
+  caps: [untrusted_input, outbound, code_exec]
+- id: chrome-devtools
+  match: { npm: [chrome-devtools-mcp] }
+  label: browses the web and runs page scripts
+  caps: [untrusted_input, outbound, code_exec]
+- id: slack
+  match: { npm: ["@modelcontextprotocol/server-slack"], docker: [mcp/slack] }
+  label: reads Slack messages anyone can write, and can post to Slack
+  caps: [untrusted_input, outbound, private_data]
+- id: postgres
+  match: { npm: ["@modelcontextprotocol/server-postgres"], docker: [mcp/postgres] }
+  label: reads database contents
+  caps: [private_data]
+- id: sqlite
+  match: { pypi: [mcp-server-sqlite], docker: [mcp/sqlite] }
+  label: reads and writes a local database
+  caps: [private_data, writes]
+- id: memory
+  match: { npm: ["@modelcontextprotocol/server-memory"], docker: [mcp/memory] }
+  label: stores and recalls saved notes
+  caps: [private_data, writes]
+- id: git
+  match: { pypi: [mcp-server-git], docker: [mcp/git] }
+  label: reads and changes local git repositories
+  caps: [private_data, writes]
+- id: gdrive
+  match: { npm: ["@modelcontextprotocol/server-gdrive"], docker: [mcp/gdrive] }
+  label: reads Google Drive files, including ones others share with you
+  caps: [private_data, untrusted_input]
+- id: everything
+  match: { npm: ["@modelcontextprotocol/server-everything"], docker: [mcp/everything] }
+  label: test server with no real access
+  caps: []
+- id: sequential-thinking
+  match: { npm: ["@modelcontextprotocol/server-sequential-thinking"], docker: [mcp/sequentialthinking] }
+  label: step-by-step reasoning helper, no outside access
+  caps: []
+- id: time
+  match: { pypi: [mcp-server-time], docker: [mcp/time] }
+  label: time and time zone conversion, no outside access
+  caps: []
+- id: desktop-commander
+  match: { npm: ["@wonderwhy-er/desktop-commander"] }
+  label: runs terminal commands and edits local files
+  caps: [code_exec, writes, private_data]
+- id: kubernetes
+  match: { npm: [mcp-server-kubernetes] }
+  label: runs kubectl and helm against your cluster
+  caps: [code_exec, writes, private_data]
+- id: context7
+  match: { npm: ["@upstash/context7-mcp"], url: [mcp.context7.com/mcp] }
+  label: reads library documentation from the web
+  caps: [untrusted_input]
+- id: tavily
+  match: { npm: [tavily-mcp], url: [mcp.tavily.com/mcp] }
+  label: reads untrusted search results and web pages
+  caps: [untrusted_input]
+- id: firecrawl
+  match: { npm: [firecrawl-mcp] }
+  label: reads untrusted web pages
+  caps: [untrusted_input]
+- id: notion
+  match: { npm: ["@notionhq/notion-mcp-server"], url: [mcp.notion.com] }
+  label: reads and edits Notion pages, including shared ones
+  caps: [private_data, untrusted_input, writes]
+- id: linear
+  match: { url: [mcp.linear.app] }
+  label: reads and edits Linear issues others can write
+  caps: [private_data, untrusted_input, writes]
+- id: sentry
+  match: { pypi: [mcp-server-sentry], url: [mcp.sentry.dev] }
+  label: reads error reports containing user-supplied text
+  caps: [private_data, untrusted_input]
+- id: atlassian
+  match: { url: [mcp.atlassian.com] }
+  label: reads and edits Jira and Confluence content others can write
+  caps: [private_data, untrusted_input, writes]
+- id: supabase
+  match: { npm: ["@supabase/mcp-server-supabase"], url: [mcp.supabase.com/mcp] }
+  label: reads and changes your Supabase projects and data
+  caps: [private_data, untrusted_input, writes]
+- id: stripe
+  match: { npm: ["@stripe/mcp"], url: [mcp.stripe.com] }
+  label: reads and changes Stripe account data
+  caps: [private_data, writes]

@@ -1,0 +1,14 @@
+id: npx-unpinned
+title: npx package without a version
+severity: medium
+applies_to: servers
+check: npx-unpinned
+why: 'npx fetches whatever is newest at launch, so a compromised or buggy release runs on your machine the next time the client starts.'
+fix: 'Pin an exact version: "args": ["-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "/path"].'
+references: [https://modelcontextprotocol.io/specification]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"] } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "/tmp"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: node, args: ["server.js"] } } } }

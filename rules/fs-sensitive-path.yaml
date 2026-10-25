@@ -1,0 +1,17 @@
+id: fs-sensitive-path
+title: Path to credentials or secrets in arguments
+severity: high
+applies_to: servers
+check: fs-sensitive-path
+why: 'Handing a server your SSH, cloud or kubectl credential folder, or an .env file, puts those secrets in reach of the model.'
+fix: Remove the path and share only the project files the server needs.
+references: [https://modelcontextprotocol.io/specification]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "/home/me/.ssh"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: node, args: ["s.js", "C:\\Users\\me\\.aws\\credentials"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: node, args: ["s.js", "/srv/app/.env"] } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { s: { command: node, args: ["s.js", "/home/me/projects/app"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: node, args: ["s.js", "/home/me/.sshfoo/x"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "--env-file", ".env", "mcp/x:1.0"] } } } }

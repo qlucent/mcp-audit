@@ -1,0 +1,14 @@
+id: unknown-transport
+title: Server with neither command nor url
+severity: low
+applies_to: servers
+check: unknown-transport
+why: 'The client cannot start this server, and the auditor cannot check what it would run.'
+fix: 'Add a "command" (local server) or a "url" (remote server).'
+references: [https://modelcontextprotocol.io/specification]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { s: { args: ["x"] } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { s: { command: node, args: ["server.js"] } } } }
+    - { file: mcp.json, config: { mcpServers: { r: { url: "https://example.com/mcp", headers: { Authorization: "${X}" } } } } }

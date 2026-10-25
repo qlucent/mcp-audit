@@ -1,0 +1,14 @@
+id: dangerous-mix
+title: Untrusted input can reach an outbound tool
+severity: high
+applies_to: groups
+check: dangerous-mix
+why: 'If one tool reads content others can write (web pages, issues, messages) and another can send data out, a hidden instruction in that content can make the agent leak your data. This is the prompt-injection exfiltration path.'
+fix: Split these servers across separate agents or profiles, drop the outbound tool, or require approval for every call to the outbound tool.
+references: [https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { f: { command: uvx, args: [mcp-server-fetch] }, g: { command: npx, args: ["-y", "@modelcontextprotocol/server-github"] } } } }
+    - { file: mcp.json, config: { mcpServers: { g: { command: npx, args: ["-y", "@modelcontextprotocol/server-github"] } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { b: { command: npx, args: ["-y", "@modelcontextprotocol/server-brave-search"] }, fs: { command: npx, args: ["-y", "@modelcontextprotocol/server-filesystem", "/work"] } } } }

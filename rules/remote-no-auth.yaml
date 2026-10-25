@@ -1,0 +1,16 @@
+id: remote-no-auth
+title: Remote server with no authentication header
+severity: low
+applies_to: servers
+check: remote-no-auth
+why: 'The config sends no credential to this remote server. That is fine when the server signs you in with OAuth (Notion, Linear and other hosted servers do; the client opens a browser login). Otherwise anyone who learns the URL can call it, and you cannot tell who is using it.'
+fix: 'If the server uses OAuth sign-in, nothing to change. Otherwise send a header that references a secret instead of a literal, e.g. "headers": {"Authorization": "Bearer ${input:token}"}.'
+references: [https://modelcontextprotocol.io/specification/draft/basic/authorization]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { r: { url: "https://example.com/mcp" } } } }
+    - { file: mcp.json, config: { mcpServers: { r: { url: "https://example.com/mcp", headers: { Accept: "application/json" } } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { r: { url: "https://example.com/mcp", headers: { Authorization: "Bearer ${input:tok}" } } } } }
+    - { file: mcp.json, config: { mcpServers: { r: { url: "https://example.com/mcp", headers: { "X-API-Key": "${env:KEY}" } } } } }
+    - { file: mcp.json, config: { mcpServers: { r: { url: "http://localhost:3000/mcp" } } } }

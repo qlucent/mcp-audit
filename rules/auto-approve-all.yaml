@@ -1,0 +1,19 @@
+id: auto-approve-all
+title: MCP servers or tools approved without a prompt
+severity: high
+applies_to: settings
+check: auto-approve-all
+why: 'Approving every project MCP server, or every tool of a server, means a cloned repository or an injected prompt can start servers and call tools without you seeing a prompt. A "*" in alwaysAllow or autoApprove is treated here as an approve-everything entry (not documented as a wildcard).'
+fix: 'Remove "enableAllProjectMcpServers" and list only the servers you reviewed in "enabledMcpjsonServers". Replace a "*" in "alwaysAllow" or "autoApprove" with the names of the safe, read-only tools.'
+references:
+  - https://code.claude.com/docs/en/settings-reference
+  - https://docs.cline.bot/mcp/configuring-mcp-servers
+  - https://roocodeinc.github.io/Roo-Code/features/mcp/using-mcp-in-roo
+fixtures:
+  fail:
+    - { file: .claude/settings.json, config: { enableAllProjectMcpServers: true } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: node, args: [server.js], alwaysAllow: ["*"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: node, args: [server.js], autoApprove: ["read_file", "*"] } } } }
+  pass:
+    - { file: .claude/settings.json, config: { enableAllProjectMcpServers: false, enabledMcpjsonServers: [memory] } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: node, args: [server.js], alwaysAllow: ["read_file"], autoApprove: [] } } } }

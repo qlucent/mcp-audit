@@ -1,0 +1,47 @@
+{
+  "name": "@qlucent/mcp-audit",
+  "version": "0.1.0",
+  "description": "Audit MCP and AI agent client configs for risky settings. Runs locally.",
+  "type": "module",
+  "author": "Qlucent (https://qlucent.com)",
+  "license": "Apache-2.0",
+  "homepage": "https://qlucent.com/tools/mcp-audit/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qlucent/mcp-audit.git"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "mcp-audit": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "rules": "node scripts/compile-rules.ts",
+    "build": "npm run rules && tsc -p tsconfig.build.json",
+    "test": "npm run rules && node --test --test-concurrency=1 \"test/**/*.test.ts\"",
+    "typecheck": "npm run rules && tsc --noEmit"
+  },
+  "dependencies": {
+    "jsonc-parser": "3.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "ajv": "8.20.0",
+    "ajv-draft-04": "1.0.0",
+    "typescript": "6.0.3",
+    "yaml": "2.9.1"
+  },
+  "bugs": {
+    "url": "https://github.com/qlucent/mcp-audit/issues"
+  }
+}

@@ -1,0 +1,19 @@
+id: docker-privileged
+title: Docker container with host-level access
+severity: high
+applies_to: servers
+check: docker-privileged
+why: 'Privileged mode, host networking, a root mount or the Docker socket gives the container (and the server in it) control of the host.'
+fix: 'Drop the flag and mount only the one directory the server needs, e.g. "-v", "/home/me/project:/work:ro".'
+references: [https://docs.docker.com/engine/containers/run/#runtime-privilege-and-linux-capabilities]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "-i", "--rm", "--privileged", "img:1.0"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "--net", "host", "img:1.0"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "--network=host", "img:1.0"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "-v", "/:/host", "img:1.0"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "-v", "/var/run/docker.sock:/var/run/docker.sock", "img:1.0"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "--cap-add=SYS_ADMIN", "img:1.0"] } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "-i", "--rm", "-v", "/home/me/proj:/work:ro", "img:1.0"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "--network", "bridge", "img:1.0"] } } } }

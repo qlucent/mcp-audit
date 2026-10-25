@@ -1,0 +1,16 @@
+id: bypass-permissions
+title: Claude Code starts in bypassPermissions mode
+severity: high
+applies_to: settings
+check: bypass-permissions
+why: 'Where the setting is honoured (user and managed settings), in bypassPermissions mode Claude Code skips permission prompts, so the model, or a prompt injected into it, can run commands and edit files without asking you.'
+fix: 'Remove "defaultMode": "bypassPermissions" and keep the default mode. Set "permissions.disableBypassPermissionsMode": "disable" to block the mode, and allow only the specific commands you need.'
+references:
+  - https://code.claude.com/docs/en/settings-reference
+  - https://code.claude.com/docs/en/permissions
+fixtures:
+  fail:
+    - { file: .claude/settings.json, config: { permissions: { defaultMode: bypassPermissions } } }
+  pass:
+    - { file: .claude/settings.json, config: { permissions: { defaultMode: acceptEdits } } }
+    - { file: .claude/settings.json, config: { permissions: { allow: ["Bash(npm test:*)"] } } }

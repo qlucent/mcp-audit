@@ -1,0 +1,15 @@
+id: docker-unpinned
+title: Docker image without a pinned tag or digest
+severity: medium
+applies_to: servers
+check: docker-unpinned
+why: 'An image with no tag, or :latest, can change under you; the next run may pull different code.'
+fix: 'Pin a digest: "args": ["run", "-i", "--rm", "mcp/fetch@sha256:<digest>"], or at least a version tag.'
+references: [https://modelcontextprotocol.io/specification]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "-i", "--rm", "mcp/fetch"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "-i", "--rm", "mcp/fetch:latest"] } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "-i", "--rm", "mcp/fetch@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: docker, args: ["run", "-i", "--rm", "ghcr.io/o/i:1.0"] } } } }

@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "mcp-audit rule",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "severity", "applies_to", "why", "fix", "references", "fixtures"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "severity": { "enum": ["critical", "high", "medium", "low"] },
+    "applies_to": { "enum": ["servers", "settings", "groups"] },
+    "match": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target", "pattern"],
+      "properties": {
+        "target": { "enum": ["command", "args", "env", "headers", "url"] },
+        "pattern": { "type": "string", "minLength": 1 },
+        "flags": { "type": "string", "pattern": "^[imsu]*$" },
+        "key_pattern": { "type": "string" },
+        "not_pattern": { "type": "string" }
+      }
+    },
+    "check": { "type": "string", "minLength": 1 },
+    "why": { "type": "string", "minLength": 1 },
+    "fix": { "type": "string", "minLength": 1 },
+    "references": { "type": "array", "items": { "type": "string", "pattern": "^https?://" } },
+    "fixtures": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fail", "pass"],
+      "properties": {
+        "fail": { "$ref": "#/definitions/fixtureList" },
+        "pass": { "$ref": "#/definitions/fixtureList" }
+      }
+    }
+  },
+  "oneOf": [
+    { "required": ["match"], "not": { "required": ["check"] } },
+    { "required": ["check"], "not": { "required": ["match"] } }
+  ],
+  "definitions": {
+    "fixtureList": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["config"],
+        "properties": { "file": { "type": "string" }, "config": {} }
+      }
+    }
+  }
+}

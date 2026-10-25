@@ -1,0 +1,18 @@
+id: fs-root
+title: Filesystem server rooted at a drive, root or home directory
+severity: high
+applies_to: servers
+check: fs-root
+why: 'Giving a file server your whole disk or home directory exposes SSH keys, cloud credentials and every other project to the model.'
+fix: Point it at the one project folder it needs, e.g. "/home/me/projects/app".
+references: [https://modelcontextprotocol.io/specification]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "/"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "~"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "C:\\"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "/Users/me"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "${HOME}"] } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "/home/me/projects/app"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: node, args: ["server.js", "/"] } } } }

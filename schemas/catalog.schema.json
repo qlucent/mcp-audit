@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "mcp-audit server catalog",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "label", "caps", "match"],
+    "properties": {
+      "id": { "type": "string", "minLength": 1 },
+      "label": { "type": "string", "minLength": 1 },
+      "caps": {
+        "type": "array",
+        "items": { "enum": ["untrusted_input", "outbound", "private_data", "code_exec", "writes"] }
+      },
+      "match": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "properties": {
+          "npm": { "type": "array", "items": { "type": "string" } },
+          "pypi": { "type": "array", "items": { "type": "string" } },
+          "docker": { "type": "array", "items": { "type": "string" } },
+          "url": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

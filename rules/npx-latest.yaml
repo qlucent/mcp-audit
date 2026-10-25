@@ -1,0 +1,15 @@
+id: npx-latest
+title: npx package on a moving tag or version range
+severity: medium
+applies_to: servers
+check: npx-latest
+why: 'A moving tag such as @latest or @beta, or a range such as @^1, is not a pin: each launch can run different code.'
+fix: 'Replace the tag with an exact version: "args": ["-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "/path"].'
+references: [https://modelcontextprotocol.io/specification]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "some-mcp@latest"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "some-mcp@beta"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "some-mcp@^1.2.3"] } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "some-mcp@1.4.2"] } } } }

@@ -1,0 +1,13 @@
+id: uvx-unpinned
+title: uvx package without a version
+severity: medium
+applies_to: servers
+check: uvx-unpinned
+why: 'uvx resolves the newest release at launch, so a compromised or buggy release runs the next time the client starts.'
+fix: 'Pin an exact version: "args": ["mcp-server-fetch==2025.4.7"].'
+references: [https://modelcontextprotocol.io/specification]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { s: { command: uvx, args: ["mcp-server-fetch"] } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { s: { command: uvx, args: ["mcp-server-fetch==2025.4.7"] } } } }

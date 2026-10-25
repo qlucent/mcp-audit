@@ -1,0 +1,14 @@
+id: package-from-url
+title: Package installed from a URL or git repo
+severity: high
+applies_to: servers
+check: package-from-url
+why: 'Code pulled from a git branch or tarball URL skips registry checks and can change without a version bump.'
+fix: 'Install a published, version-pinned release, e.g. "args": ["-y", "some-mcp@1.4.2"], or pin the git ref to a full commit hash.'
+references: [https://modelcontextprotocol.io/specification]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "github:user/repo"] } } } }
+    - { file: mcp.json, config: { mcpServers: { s: { command: uvx, args: ["--from", "git+https://example.com/o/r.git", "cmd"] } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { s: { command: npx, args: ["-y", "some-mcp@1.4.2"] } } } }

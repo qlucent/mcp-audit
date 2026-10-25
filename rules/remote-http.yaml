@@ -1,0 +1,16 @@
+id: remote-http
+title: Remote server over plain HTTP
+severity: high
+applies_to: servers
+match:
+  target: url
+  pattern: '^http://(?!(localhost|127\.0\.0\.1|\[::1\])(:|/|$))'
+  flags: i
+why: Traffic, including any auth headers, can be read or changed on the network.
+fix: Use an https:// URL.
+references: [https://modelcontextprotocol.io/specification]
+fixtures:
+  fail:
+    - { file: mcp.json, config: { mcpServers: { r: { url: "http://example.com/mcp" } } } }
+  pass:
+    - { file: mcp.json, config: { mcpServers: { r: { url: "https://example.com/mcp" } } } }

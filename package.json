@@ -27,6 +27,7 @@
   },
   "scripts": {
     "rules": "node scripts/compile-rules.ts",
+    "prepublishOnly": "npm run build && npm test",
     "build": "npm run rules && tsc -p tsconfig.build.json",
     "test": "npm run rules && node --test --test-concurrency=1 \"test/**/*.test.ts\"",
     "typecheck": "npm run rules && tsc --noEmit"

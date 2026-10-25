@@ -1,10 +1,8 @@
 ---
 name: New rule
-about: Suggest a check a tool should make
+about: Suggest a check mcp-audit should make
 labels: new-rule
 ---
-
-**Tool:**
 
 **What should be flagged:**
 

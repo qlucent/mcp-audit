@@ -2,7 +2,7 @@
 
 **Live: [qlucent.com/tools/mcp-audit](https://qlucent.com/tools/mcp-audit/?utm_source=github)**
 
-Audits MCP and AI agent client configs (Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini CLI) for plaintext secrets, unpinned servers, shell execution, broad filesystem roots, plain-HTTP remotes, allow-all permissions and risky tool combinations. Same engine as the web page: https://qlucent.com/tools/mcp-audit/?utm_source=github
+Audits MCP and AI agent client configs (Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini CLI) for plaintext secrets, unpinned servers, shell execution, broad filesystem roots, plain-HTTP remotes, allow-all permissions and risky tool combinations. Same engine as the web page.
 
 Nothing leaves your machine: no network calls, and secrets are masked in every output.
 
@@ -25,7 +25,7 @@ npx @qlucent/mcp-audit --format sarif --output mcp-audit.sarif
 
 - `0` nothing at or above the threshold
 - `1` findings at or above the threshold
-- `2` usage error, no files found, no file recognised as an MCP config, every file failed to parse, or a file named on the command line failed to parse
+- `2` usage error, no files found, none of the files could be read, no file recognised as an MCP config, every file failed to parse, a file named on the command line failed to parse, or the `--output` file could not be written
 
 ## GitHub Actions
 
@@ -38,6 +38,9 @@ jobs:
       security-events: write # upload-sarif needs it
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
       - run: npx @qlucent/mcp-audit .mcp.json .vscode/mcp.json --format sarif --output mcp-audit.sarif --fail-on none
       - uses: github/codeql-action/upload-sarif@v4
         with:

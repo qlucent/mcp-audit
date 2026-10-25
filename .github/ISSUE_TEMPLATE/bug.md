@@ -1,13 +1,20 @@
 ---
 name: Bug
-about: Something on a tool page is broken
+about: The CLI or library crashed, gave a wrong result or exited with the wrong code
 labels: bug
 ---
 
-**Page URL:**
+**Version** (`npx @qlucent/mcp-audit --version`):
 
-**What happened:**
+**Command you ran:**
+
+**Smallest config that reproduces it** (fake values in place of real secrets and hostnames):
+
+```
+```
+
+**What happened** (output and exit code):
 
 **What you expected:**
 
-**Browser and OS:**
+**Node version and OS:**

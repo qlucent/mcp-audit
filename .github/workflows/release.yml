@@ -28,7 +28,12 @@ jobs:
       - run: npm run build
       - run: npm test
       # Trusted publishing adds provenance itself. Pre-releases (a '-' in the version) go to the next tag.
-      - run: |
+      - name: Publish
+        run: |
           pkg="$(node -p "require('./package.json').version")"
+          if npm view "@qlucent/mcp-audit@$pkg" version >/dev/null 2>&1; then
+            echo "@qlucent/mcp-audit@$pkg is already on npm (published by hand or by an earlier run); skipping publish."
+            exit 0
+          fi
           case "$pkg" in *-*) tag=next ;; *) tag=latest ;; esac
           npm publish --access public --tag "$tag"
